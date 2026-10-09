@@ -140,12 +140,12 @@
     // ---- map
     $("loader").hidden = true; $("app").hidden = false;
     const map = L.map("map", { preferCanvas: true }).setView([28.2, 84.1], 7);
-    // OSM tiles need a Referer, which pages opened from disk do not send; Esri tiles do not
-    const osm = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Tiles &copy; Esri" }).addTo(map);
+    // OSM tiles need a Referer: fine on GitHub Pages / the local server, blocked when the page is opened from disk
+    const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
     const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Imagery &copy; Esri" });
     const gWards = L.layerGroup().addTo(map), gPaths = L.layerGroup().addTo(map), gMk = L.layerGroup().addTo(map),
           gRain = L.layerGroup().addTo(map), gMon = L.layerGroup().addTo(map);
-    L.control.layers({ "Street map (Esri)": osm, "Satellite (Esri)": sat }, null, { collapsed: true }).addTo(map);
+    L.control.layers({ "OpenStreetMap": osm, "Satellite (Esri)": sat }, null, { collapsed: true }).addTo(map);
     const legend = L.control({ position: "bottomleft" });
     legend.onAdd = () => { const d = L.DomUtil.create("div", "legend"); d.innerHTML =
       `<div><i style="background:${css("--active")};border-radius:1px"></i>active river monitor</div><div><i style="background:${css("--inactive")};border-radius:1px"></i>inactive river monitor</div>` +
