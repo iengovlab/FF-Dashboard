@@ -165,17 +165,19 @@
     for (const id of ["lyPath", "lyWards"]) $(id).addEventListener("change", syncLayers);
     // flood hazard (METEOR / Fathom): live tiles, depth in metres; layer name = type + return period, e.g. fd-1in100
     const FLOOD_URL = "https://maps.meteor-project.org/mapproxy/npl-flood/wmts/{l}/webmercator/{z}/{x}/{y}.png";
-    const floodLegendUrl = (l) => "https://maps.meteor-project.org/mapproxy/npl-flood/service?format=image%2Fpng&layer=" + l + "&sld_version=1.1.0&request=GetLegendGraphic&service=WMS&version=1.1.1&styles=";
+    // METEOR depth classes (m) and colours, the same for every flood layer; drawn here so the legend matches the other map legends
+    const FLOOD_CLASSES = [["#f86700", "0.1"], ["#cbcbff", "1"], ["#9999ff", "2"], ["#5a5ae1", "3"], ["#3434ff", "4"], ["#0000ff", "5"], ["#dd34e2", "permanent water"]];
     const floodName = () => $("floodType").value + "-" + $("floodRp").value;
     const flood = L.tileLayer(FLOOD_URL, { l: floodName(), opacity: 0.7, maxNativeZoom: 15, maxZoom: 19,
       attribution: 'Flood hazard &copy; <a href="https://maps.meteor-project.org/map/flood-npl/" target="_blank" rel="noopener">METEOR</a> / Fathom (ODbL)' });
     const floodLegend = L.control({ position: "bottomleft" });
     floodLegend.onAdd = () => { const d = L.DomUtil.create("div", "legend floodleg");
-      d.innerHTML = `<div class="ft">Flood depth (m)</div><img alt="Flood depth colour scale">`; return d; };
+      d.innerHTML = `<div class="ft">Flood depth (m)</div>` +
+        FLOOD_CLASSES.map(([c, t]) => `<div><i style="background:${c};border-radius:1px;opacity:.8"></i>${t}</div>`).join(""); return d; };
     const syncFlood = () => {
       const on = $("lyFlood").checked;
       flood.options.l = floodName(); flood.redraw();   // setUrl() skips the redraw when the template is unchanged
-      if (on) { map.addLayer(flood); if (!floodLegend._map) floodLegend.addTo(map); floodLegend.getContainer().querySelector("img").src = floodLegendUrl(flood.options.l); }
+      if (on) { map.addLayer(flood); if (!floodLegend._map) floodLegend.addTo(map); }
       else { map.removeLayer(flood); if (floodLegend._map) floodLegend.remove(); }
     };
     $("lyFlood").addEventListener("change", syncFlood);

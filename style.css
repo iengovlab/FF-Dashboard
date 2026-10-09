@@ -77,8 +77,6 @@ footer code { font-size: 11px; }
   box-shadow: var(--shadow); font-size: 12px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .floodleg .ft { font-weight: 600; margin-bottom: 2px; }
-/* the server's legend image has black text on transparent: give it a light backing so it reads in dark mode too */
-.floodleg img { display: block; max-width: 90px; background: #fff; border-radius: 4px; padding: 2px; }
 .ctl.flood { min-width: 260px; }
 .monsq { background: var(--active); border: 1px solid #1e6b24; border-radius: 1px; box-shadow: 0 0 0 1px rgba(255,255,255,.7); }
 .monsq.off { background: var(--inactive); border-color: #4f565e; opacity: .7; }
