@@ -160,6 +160,9 @@
     const onZoom = () => { const z = map.getZoom(); zoomLbl.getContainer().textContent = "zoom " + z;
       if (z >= MK_MIN_ZOOM) map.addLayer(gMk); else map.removeLayer(gMk); };
     map.on("zoomend", onZoom); onZoom();
+    // show/hide the downstream river path and the ward boundaries (the layers keep their content)
+    const syncLayers = () => { for (const [id, g] of [["lyPath", gPaths], ["lyWards", gWards]]) { if ($(id).checked) map.addLayer(g); else map.removeLayer(g); } };
+    for (const id of ["lyPath", "lyWards"]) $(id).addEventListener("change", syncLayers);
     // selection box: says how to filter, and resets the filter (the only way to clear it besides Reset)
     const selBox = L.control({ position: "topright" });
     selBox.onAdd = () => { const d = L.DomUtil.create("div", "mapsel"); L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
