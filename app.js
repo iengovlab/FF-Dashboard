@@ -163,6 +163,24 @@
     // show/hide the downstream river path and the ward boundaries (the layers keep their content)
     const syncLayers = () => { for (const [id, g] of [["lyPath", gPaths], ["lyWards", gWards]]) { if ($(id).checked) map.addLayer(g); else map.removeLayer(g); } };
     for (const id of ["lyPath", "lyWards"]) $(id).addEventListener("change", syncLayers);
+    // flood hazard (METEOR / Fathom): live tiles, depth in metres; layer name = type + return period, e.g. fd-1in100
+    const FLOOD_URL = "https://maps.meteor-project.org/mapproxy/npl-flood/wmts/{l}/webmercator/{z}/{x}/{y}.png";
+    const floodLegendUrl = (l) => "https://maps.meteor-project.org/mapproxy/npl-flood/service?format=image%2Fpng&layer=" + l + "&sld_version=1.1.0&request=GetLegendGraphic&service=WMS&version=1.1.1&styles=";
+    const floodName = () => $("floodType").value + "-" + $("floodRp").value;
+    const flood = L.tileLayer(FLOOD_URL, { l: floodName(), opacity: 0.7, maxNativeZoom: 15, maxZoom: 19,
+      attribution: 'Flood hazard &copy; <a href="https://maps.meteor-project.org/map/flood-npl/" target="_blank" rel="noopener">METEOR</a> / Fathom (ODbL)' });
+    const floodLegend = L.control({ position: "bottomleft" });
+    floodLegend.onAdd = () => { const d = L.DomUtil.create("div", "legend floodleg");
+      d.innerHTML = `<div class="ft">Flood depth (m)</div><img alt="Flood depth colour scale">`; return d; };
+    const syncFlood = () => {
+      const on = $("lyFlood").checked;
+      flood.options.l = floodName(); flood.redraw();   // setUrl() skips the redraw when the template is unchanged
+      if (on) { map.addLayer(flood); if (!floodLegend._map) floodLegend.addTo(map); floodLegend.getContainer().querySelector("img").src = floodLegendUrl(flood.options.l); }
+      else { map.removeLayer(flood); if (floodLegend._map) floodLegend.remove(); }
+    };
+    $("lyFlood").addEventListener("change", syncFlood);
+    // changing the type or rarity turns the layer on, so the choice always has a visible effect
+    for (const id of ["floodType", "floodRp"]) $(id).addEventListener("change", () => { $("lyFlood").checked = true; syncFlood(); });
     // selection box: says how to filter, and resets the filter (the only way to clear it besides Reset)
     const selBox = L.control({ position: "topright" });
     selBox.onAdd = () => { const d = L.DomUtil.create("div", "mapsel"); L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);

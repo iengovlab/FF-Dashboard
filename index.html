@@ -50,6 +50,28 @@
       <label><input type="checkbox" id="lyInRain"> inactive rain monitors</label>
     </div>
   </div>
+  <div class="ctl flood">
+    <label class="lbl"><input type="checkbox" id="lyFlood"> Flood hazard map <span class="hint">(METEOR, water depth)</span></label>
+    <div class="pair">
+      <select id="floodType" aria-label="Flood type">
+        <option value="fd">River flooding, with flood defences</option>
+        <option value="fu">River flooding, without flood defences</option>
+        <option value="p">Heavy-rain (surface water) flooding</option>
+      </select>
+      <select id="floodRp" aria-label="How rare a flood">
+        <option value="1in5">1-in-5 year flood (20% chance a year)</option>
+        <option value="1in10">1-in-10 year flood (10% chance a year)</option>
+        <option value="1in20">1-in-20 year flood (5% chance a year)</option>
+        <option value="1in50">1-in-50 year flood (2% chance a year)</option>
+        <option value="1in75">1-in-75 year flood (1.3% chance a year)</option>
+        <option value="1in100" selected>1-in-100 year flood (1% chance a year)</option>
+        <option value="1in200">1-in-200 year flood (0.5% chance a year)</option>
+        <option value="1in250">1-in-250 year flood (0.4% chance a year)</option>
+        <option value="1in500">1-in-500 year flood (0.2% chance a year)</option>
+        <option value="1in1000">1-in-1000 year flood (0.1% chance a year)</option>
+      </select>
+    </div>
+  </div>
   <button id="reset" class="btn ghost" type="button">Reset</button>
   <details class="limits">
     <summary>About this data</summary>
@@ -59,6 +81,7 @@
       <li>Rivers: HydroRIVERS v1.0 (HydroSHEDS)</li>
       <li>River and rain monitors: BIPAD portal (bipadportal.gov.np), cross-checked with the DHM station list (hydrology.gov.np)</li>
       <li>Markets: OpenStreetMap contributors (Overpass), including features named bazaar, haat and mandi</li>
+      <li>Flood hazard map: METEOR project (maps.meteor-project.org), modelled with Fathom, licensed ODbL. It shows modelled water depth in metres for a flood of the chosen rarity. It is loaded live from METEOR, so it needs internet</li>
       <li>Base maps: OpenStreetMap contributors; satellite imagery: Esri</li>
     </ul>
     <p><b>Method</b>: a place is listed if the river downstream of a monitor passes through it, up to <span class="kmMax">25</span> km along the river, for monitors that reported within the last <span class="hMax">48</span> hours.</p>

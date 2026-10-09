@@ -7,6 +7,8 @@ Data files in `data/` (all read-only, nothing is saved):
 - `01_wards_nepal.gpkg`, `02_rivers_hydrorivers.gpkg`
 - `03_monitors_bipad.csv`, `04_markets_osm.csv`, `05_downstream_wards.csv`
 
+The optional flood hazard layer is loaded live from maps.meteor-project.org (METEOR / Fathom, ODbL), so it needs internet.
+
 ## View online
 Publish with GitHub Pages (repo Settings > Pages > deploy from the main branch, root folder).
 

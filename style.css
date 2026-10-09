@@ -76,6 +76,9 @@ footer code { font-size: 11px; }
 .legend { background: var(--panel); color: var(--ink); padding: 6px 10px; border-radius: 6px; line-height: 1.6;
   box-shadow: var(--shadow); font-size: 12px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.floodleg .ft { font-weight: 600; margin-bottom: 2px; }
+.floodleg img { display: block; max-width: 90px; }
+.ctl.flood { min-width: 260px; }
 .monsq { background: var(--active); border: 1px solid #1e6b24; border-radius: 1px; box-shadow: 0 0 0 1px rgba(255,255,255,.7); }
 .monsq.off { background: var(--inactive); border-color: #4f565e; opacity: .7; }
 .monsq.sel { border: 2px solid #1c2430; }
