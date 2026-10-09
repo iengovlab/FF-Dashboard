@@ -3,7 +3,9 @@
 (function () {
   "use strict";
   // Limits of what 05 holds: keep equal to MAX_RIVER_KM / ACTIVE_WINDOW_H in 05_downstream_wards.py
-  const KM_MAX = 25, H_MAX = 48;
+  const KM_MAX = 100, H_MAX = 168;
+  // Filter values on load and on Reset
+  const KM_DEF = 25, H_DEF = 168;
   const MK_MIN_ZOOM = 12; // markets are drawn only at this map zoom or closer
   const NEED = ["01_wards_nepal.gpkg", "02_rivers_hydrorivers.gpkg", "03_monitors_bipad.csv", "04_markets_osm.csv", "05_downstream_wards.csv"];
   const $ = (id) => document.getElementById(id);
@@ -122,7 +124,7 @@
     }
 
     // ---- state and controls
-    const st = { km: KM_MAX, hrs: H_MAX, basin: "", q: "", sel: null, shown: 300 };
+    const st = { km: KM_DEF, hrs: H_DEF, basin: "", q: "", sel: null, shown: 300 };
     const basins = [...new Set(river.map((r) => r.basin).filter(Boolean))].sort();
     for (const b of basins) $("basin").insertAdjacentHTML("beforeend", `<option>${esc(b)}</option>`);
     const sync = () => { $("km").value = st.km; $("kmR").value = st.km; $("hrs").value = st.hrs; $("hrsR").value = st.hrs; };
@@ -131,7 +133,7 @@
     $("basin").addEventListener("change", (e) => { st.basin = e.target.value; schedule(); });
     $("q").addEventListener("input", (e) => { st.q = e.target.value.trim().toLowerCase(); schedule(); });
     for (const id of ["lyMk", "lyRiver", "lyRain", "lyInRiver", "lyInRain"]) $(id).addEventListener("change", schedule);
-    $("reset").addEventListener("click", () => { Object.assign(st, { km: KM_MAX, hrs: H_MAX, basin: "", q: "", sel: null }); $("basin").value = ""; $("q").value = ""; sync(); schedule(); });
+    $("reset").addEventListener("click", () => { Object.assign(st, { km: KM_DEF, hrs: H_DEF, basin: "", q: "", sel: null }); $("basin").value = ""; $("q").value = ""; sync(); schedule(); });
     $("more").addEventListener("click", () => { st.shown += 300; renderTable(); });
     sync();
     let timer = null;

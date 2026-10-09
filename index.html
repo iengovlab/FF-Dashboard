@@ -23,12 +23,12 @@
 <div id="app" hidden>
 <section class="controls" aria-label="Filters">
   <div class="ctl">
-    <label for="km">How far downstream <span class="hint">(km, 0–<span class="kmMax">25</span>)</span></label>
-    <div class="pair"><input type="range" id="kmR" min="0" max="25" step="0.5"><input type="number" id="km" min="0" max="25" step="0.5"></div>
+    <label for="km">How far downstream <span class="hint">(km, 0–<span class="kmMax">100</span>)</span></label>
+    <div class="pair"><input type="range" id="kmR" min="0" max="100" step="0.5"><input type="number" id="km" min="0" max="100" step="0.5"></div>
   </div>
   <div class="ctl">
-    <label for="hrs">Monitor reported within the last <span class="hint">(hours, 0–<span class="hMax">48</span>)</span></label>
-    <div class="pair"><input type="range" id="hrsR" min="0" max="48" step="1"><input type="number" id="hrs" min="0" max="48" step="1"></div>
+    <label for="hrs">Monitor reported within the last <span class="hint">(hours, 0–<span class="hMax">168</span>)</span></label>
+    <div class="pair"><input type="range" id="hrsR" min="0" max="168" step="1"><input type="number" id="hrs" min="0" max="168" step="1"></div>
   </div>
   <div class="ctl">
     <label for="basin">River basin</label>
@@ -84,7 +84,7 @@
       <li>Flood hazard map: METEOR project (maps.meteor-project.org), modelled with Fathom, licensed ODbL. It shows modelled water depth in metres for a flood of the chosen rarity. It is loaded live from METEOR, so it needs internet</li>
       <li>Base maps: OpenStreetMap contributors; satellite imagery: Esri</li>
     </ul>
-    <p><b>Method</b>: a place is listed if the river downstream of a monitor passes through it, up to <span class="kmMax">25</span> km along the river, for monitors that reported within the last <span class="hMax">48</span> hours.</p>
+    <p><b>Method</b>: a place is listed if the river downstream of a monitor passes through it, up to <span class="kmMax">100</span> km along the river, for monitors that reported within the last <span class="hMax">168</span> hours.</p>
     <p class="maint">For maintainers: the filters can only narrow the pre-computed data in <code>data/</code>. To go further, change <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> in the pipeline scripts and re-export.</p>
   </details>
 </section>
