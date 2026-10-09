@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Downstream Places Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>River monitors &amp; downstream places</h1>
+    <p class="sub">Click a river monitor on the map to see the places downstream of it, and the markets there.</p>
+  </div>
+</header>
+
+<section id="loader" class="loader">
+  <h2>Loading data…</h2>
+  <p id="status" class="muted" aria-live="polite">This takes a few seconds.</p>
+</section>
+
+<div id="app" hidden>
+<section class="controls" aria-label="Filters">
+  <div class="ctl">
+    <label for="km">How far downstream <span class="hint">(km, 0–<span class="kmMax">25</span>)</span></label>
+    <div class="pair"><input type="range" id="kmR" min="0" max="25" step="0.5"><input type="number" id="km" min="0" max="25" step="0.5"></div>
+  </div>
+  <div class="ctl">
+    <label for="hrs">Monitor reported within the last <span class="hint">(hours, 0–<span class="hMax">48</span>)</span></label>
+    <div class="pair"><input type="range" id="hrsR" min="0" max="48" step="1"><input type="number" id="hrs" min="0" max="48" step="1"></div>
+  </div>
+  <div class="ctl">
+    <label for="basin">River basin</label>
+    <select id="basin"><option value="">All basins</option></select>
+  </div>
+  <div class="ctl grow">
+    <label for="q">Search monitor, district or palika</label>
+    <input type="search" id="q" placeholder="e.g. Bagmati, Kathmandu, Lalitpur">
+  </div>
+  <div class="ctl">
+    <span class="lbl">Show on map</span>
+    <div class="checks">
+      <label><input type="checkbox" id="lyMk" checked> markets <span class="hint">(zoom in)</span></label>
+      <label><input type="checkbox" id="lyRiver" checked> river monitors</label>
+      <label><input type="checkbox" id="lyRain"> rain monitors</label>
+      <label><input type="checkbox" id="lyInRiver"> inactive river monitors</label>
+      <label><input type="checkbox" id="lyInRain"> inactive rain monitors</label>
+    </div>
+  </div>
+  <button id="reset" class="btn ghost" type="button">Reset</button>
+  <details class="limits">
+    <summary>About this data</summary>
+    <p>Filters can only narrow what <code>05_downstream_wards.csv</code> contains
+    (up to <span class="kmMax">25</span> km downstream, monitors active within <span class="hMax">48</span> h). To go beyond that, change
+    <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> at the top of <code>05_downstream_wards.py</code>
+    (and <code>ACTIVE_WINDOW_H</code> in <code>03_monitors_bipad.py</code>), rerun 03 and 05, then reload this page.</p>
+  </details>
+</section>
+
+<section class="tiles" id="tiles" aria-live="polite"></section>
+
+<section class="main">
+  <div id="map" role="region" aria-label="Map"></div>
+</section>
+
+<section class="tablewrap">
+  <div class="tablehead">
+    <h2>Downstream places <span id="rowCount" class="muted"></span></h2>
+    <button id="dl" class="btn" type="button">Download CSV</button>
+  </div>
+  <div class="scroll">
+    <table id="tbl">
+      <thead><tr>
+        <th>monitor</th><th>basin</th><th>last reading</th>
+        <th>district</th><th>palika</th><th class="num">ward</th><th class="num">km downstream</th>
+        <th class="num">markets</th><th>market names</th><th>map</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button id="more" class="btn ghost" type="button" hidden>Show more rows</button>
+</section>
+
+<footer id="foot"></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+<script src="gpkg.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
