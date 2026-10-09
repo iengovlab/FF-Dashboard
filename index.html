@@ -53,10 +53,16 @@
   <button id="reset" class="btn ghost" type="button">Reset</button>
   <details class="limits">
     <summary>About this data</summary>
-    <p>Filters can only narrow what <code>05_downstream_wards.csv</code> contains
-    (up to <span class="kmMax">25</span> km downstream, monitors active within <span class="hMax">48</span> h). To go beyond that, change
-    <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> at the top of <code>05_downstream_wards.py</code>
-    (and <code>ACTIVE_WINDOW_H</code> in <code>03_monitors_bipad.py</code>), rerun 03 and 05, then reload this page.</p>
+    <p><b>Sources</b></p>
+    <ul>
+      <li>Ward boundaries: Survey Department, Government of Nepal (National Geoportal)</li>
+      <li>Rivers: HydroRIVERS v1.0 (HydroSHEDS)</li>
+      <li>River and rain monitors: BIPAD portal (bipadportal.gov.np), cross-checked with the DHM station list (hydrology.gov.np)</li>
+      <li>Markets: OpenStreetMap contributors (Overpass), including features named bazaar, haat and mandi</li>
+      <li>Base maps: OpenStreetMap contributors; satellite imagery: Esri</li>
+    </ul>
+    <p><b>Method</b>: a place is listed if the river downstream of a monitor passes through it, up to <span class="kmMax">25</span> km along the river, for monitors that reported within the last <span class="hMax">48</span> hours.</p>
+    <p class="maint">For maintainers: the filters can only narrow the pre-computed data in <code>data/</code>. To go further, change <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> in the pipeline scripts and re-export.</p>
   </details>
 </section>
 

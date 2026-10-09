@@ -94,3 +94,6 @@ label.btn { display: inline-block; }
 .limits { flex-basis: 100%; margin: 0; font-size: 12px; color: var(--muted); }
 [hidden] { display: none !important; }
 @media (max-width: 900px) { .loader { margin-left: 16px; margin-right: 16px; } }
+
+.limits ul { margin: 4px 0 8px; padding-left: 18px; }
+.limits .maint { opacity: .8; }

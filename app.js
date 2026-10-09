@@ -290,10 +290,7 @@
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     });
 
-    $("foot").innerHTML = `BIPAD snapshot: <b>${esc(snapshot)}</b> (the active window counts back from this time). ` +
-      `Data files: ${D.names.map((s) => `<code>${esc(s)}</code>`).join(", ")}. ` +
-      `Rows, wards and river_km come directly from <code>05_downstream_wards.csv</code>; the map's river lines are drawn from 02 for display. ` +
-      `Ward outlines are lightly simplified for display. At ${KM_MAX} km and ${H_MAX} h the table equals 05.`;
+    $("foot").innerHTML = `BIPAD snapshot: <b>${esc(snapshot)}</b> (the active window counts back from this time).`;
     update();
   }
 })();
