@@ -157,3 +157,16 @@ input[type=number], input[type=search], select { background: var(--field); }
   :root:not([data-theme="light"]) .top .logo.on-light { display: none; }
   :root:not([data-theme="light"]) .top .logo.on-dark { display: block; }
 }
+
+/* Archived tabs: dropdown at the right end of the tab bar */
+.tabbar .archive { margin-left: auto; position: relative; align-self: center; }
+.tabbar .archive summary { list-style: none; cursor: pointer; padding: 8px 14px; color: var(--muted); font-weight: 600; }
+.tabbar .archive summary::-webkit-details-marker { display: none; }
+.tabbar .archive summary::after { content: " ▾"; font-size: 11px; }
+.tabbar .archive[open] summary, .tabbar .archive summary:hover { color: var(--ink); }
+.tabbar .archive[data-open-tab] summary { color: var(--brand-dark); }
+.archive-menu { position: absolute; right: 0; top: 100%; z-index: 1000; min-width: 200px; padding: 6px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+.archive-menu a { display: block; padding: 6px 10px; border: 0; margin: 0; border-radius: 6px; }
+.archive-menu a:hover { background: var(--sand); }
+.archive-menu .muted { display: block; padding: 6px 10px; font-size: 13px; }

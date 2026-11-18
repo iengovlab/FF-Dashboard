@@ -7,7 +7,7 @@ One dashboard for the project, organised in tabs (and sub-tabs where needed). It
 |---|---|---|
 | River Monitors (`#river-monitors`) | `tabs/river_monitors.js` | Pick a river monitor on the map to see the wards downstream of it and the markets there. |
 
-To add a tab: add it to `TABS` at the top of `tabs.js`, add a `<main class="page" data-page="<id>" hidden>` block in `index.html`, and put its code in `tabs/<id>.js` (loaded at the bottom of `index.html`). Sub-tabs work the same way; see the note at the top of `tabs.js`.
+To add a tab: add it to `TABS` at the top of `tabs.js`, add a `<main class="page" data-page="<id>" hidden>` block in `index.html`, and put its code in `tabs/<id>.js` (loaded at the bottom of `index.html`). Sub-tabs work the same way; see the note at the top of `tabs.js`. To archive a finished tab, set `archived: true` on it in `TABS`: it moves from the tab bar into the "Archived" dropdown at the right end, and still opens from there.
 
 ## Data
 - `data/nepal_map/`: shared Nepal boundaries with IEN codes (ward, municipality, district, province, country), reusable by any dashboard. See its README.

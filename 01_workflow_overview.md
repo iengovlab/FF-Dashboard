@@ -40,7 +40,7 @@ This section is the hand-over guide for the dashboard in `00_dashboard\` (this f
 | `index.html` | Page layout: header, tab bars and one `<main class="page" data-page="...">` block per tab or sub-tab. |
 | `style.css` | IEN look (terracotta `#CE8769` from the logo, warm beige, Montserrat) with light and dark themes. |
 | `theme.js` | Light/dark toggle in the header. It follows the computer's setting until someone picks a theme, and then remembers that choice in the browser. |
-| `tabs.js` | The list of tabs and sub-tabs (`TABS`). It builds the tab bars, shows the open page and keeps it in the address (`#river-monitors`). |
+| `tabs.js` | The list of tabs and sub-tabs (`TABS`). It builds the tab bars and the Archived dropdown, shows the open page and keeps it in the address (`#river-monitors`). |
 | `tabs\river_monitors.js` | Code for the River Monitors tab. |
 | `gpkg.js` | Small reader for GeoPackage geometries. |
 | `serve.js` | Local preview server only (not used online). |
@@ -54,6 +54,9 @@ This section is the hand-over guide for the dashboard in `00_dashboard\` (this f
 3. Add its `<main class="page" data-page="<tab id>" hidden>` block in `index.html` (for a sub-tab: `data-page="<tab id>/<sub id>"`), and its script tag at the bottom.
 4. Write `tabs\<tab id>.js`. Start loading data inside a `tabshown` listener for that page, as `tabs\river_monitors.js` does, so nothing downloads until someone opens the tab.
 5. Check it locally, then commit and push (below).
+
+### Archiving a tab
+When a piece of work is finished, set `archived: true` on its entry in `TABS` (`tabs.js`). It leaves the tab bar and appears in the "Archived" dropdown at the right end of the tab bar, from where it still opens with its data. Nothing is deleted, so it can be brought back by removing the flag.
 
 ### Working on it locally
 1. Get the code: either use this Dropbox folder (it is a git clone), or run `git clone https://github.com/iengovlab/FF-Dashboard.git`.
