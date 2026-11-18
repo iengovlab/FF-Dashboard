@@ -30,7 +30,7 @@
       const files = {};
       for (const n of NEED) {
         status("Downloading " + n + "…");
-        const r = await fetch("data/" + n);
+        const r = await fetch("data/01_2026-10_scoping_ktm/" + n);
         if (!r.ok) throw new Error(n + " not found in the data folder (HTTP " + r.status + ")");
         files[n] = await r.blob();
       }
