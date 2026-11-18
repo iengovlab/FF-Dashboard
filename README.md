@@ -1,6 +1,6 @@
 # IEN Floods-Firms Dashboard
 
-One dashboard for the project, organised in tabs (and sub-tabs where needed). It is a static page: `index.html` + `tabs.js` + `tabs/*.js` + `gpkg.js` + `style.css`, reading the files in `data/` (all read-only, nothing is saved).
+One dashboard for the project, organised in tabs (and sub-tabs where needed). It is a static page: `index.html` + `theme.js` + `tabs.js` + `tabs/*.js` + `gpkg.js` + `style.css`, reading the files in `data/` (all read-only, nothing is saved).
 
 ## Tabs
 | Tab | Code | What it shows |
@@ -18,7 +18,7 @@ For a new project, add a `data/<project>/` folder and point the new tab's code a
 The optional flood hazard layer is loaded live from maps.meteor-project.org (METEOR / Fathom, ODbL), so it needs internet.
 
 ## View online
-Publish with GitHub Pages (repo Settings > Pages > deploy from the main branch, root folder).
+Hosted on Cloudflare Pages from this GitHub repository (IEN accounts); every push to `main` publishes it. Setup steps, access and the hand-over guide are in `01_workflow_overview.md`.
 
 ## View locally
 Browsers block a double-clicked page from reading `data/`, so run `node serve.js` in this folder

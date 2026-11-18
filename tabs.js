@@ -3,7 +3,8 @@
    and its code in tabs/<id>.js. A tab with sub-tabs lists them in `subs`; each sub-tab's block then uses
    data-page="<tab id>/<sub id>". The sub-tab bar only shows for tabs that have sub-tabs.
    The address bar keeps the open page (#<tab id> or #<tab id>/<sub id>), so links go straight to it.
-   When a page is shown, a "tabshown" event fires on document with the page id (e.g. to resize a map). */
+   When a page is shown, a "tabshown" event fires on document with the page id. Each tab loads its data
+   the first time it is shown, so only the tabs someone opens download anything. */
 (function () {
   "use strict";
   const TABS = [
@@ -31,5 +32,6 @@
     document.dispatchEvent(new CustomEvent("tabshown", { detail: page }));
   }
   window.addEventListener("hashchange", show);
-  show();
+  // first show after every tab script has run, so their "tabshown" listeners are in place
+  document.addEventListener("DOMContentLoaded", show);
 })();

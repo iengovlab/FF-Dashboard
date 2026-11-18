@@ -35,8 +35,11 @@
   document.querySelectorAll(".kmMax").forEach((e) => (e.textContent = KM_MAX));
   document.querySelectorAll(".hMax").forEach((e) => (e.textContent = H_MAX));
 
-  // data files sit in ./data next to this page (keyed below by file name); fetched as Blobs so the readers below work unchanged
-  (async () => {
+  // data files sit in ./data next to this page (keyed below by file name); fetched as Blobs so the readers below work unchanged.
+  // Nothing is downloaded until this tab is first shown.
+  let started = false;
+  document.addEventListener("tabshown", (e) => { if (e.detail === "river-monitors" && !started) { started = true; loadAll(); } });
+  async function loadAll() {
     try {
       const files = {};
       for (const p of NEED) {
@@ -48,7 +51,7 @@
       }
       await load(files);
     } catch (err) { console.error(err); status("Could not load the data: " + err.message + ". If you opened this file directly, run it through a web server (see README)."); }
-  })();
+  }
 
   const csv = (file) => new Promise((res, rej) => Papa.parse(file, { header: true, skipEmptyLines: true, complete: (r) => res(r.data), error: rej }));
 

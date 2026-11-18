@@ -7,7 +7,21 @@
   --accent: var(--brand-dark); --accent-soft: var(--sand); --active: #3bb143; --inactive: #8a939e;
   --rain: #2a9d8f; --market: #d9822b; --ward: #c9ced4; --ward-line: #4a5260; --path: #1c7ed6; --admin-line: #5b2a86;
   --radius: 10px; --shadow: 0 1px 2px rgba(40,30,20,.06), 0 1px 3px rgba(40,30,20,.08);
+  --field: #ffffff;
   color-scheme: light;
+}
+/* Dark theme: follows the system setting unless the header toggle picked one (html data-theme="light" / "dark") */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand: #dc9a7e; --brand-dark: #e8ad93; --beige: #3a332b; --sand: #241f1a;
+    --bg: #15120f; --panel: #1d1915; --ink: #f1ece4; --muted: #b3a99c; --line: #3a332b; --field: #15120f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+    --brand: #dc9a7e; --brand-dark: #e8ad93; --beige: #3a332b; --sand: #241f1a;
+    --bg: #15120f; --panel: #1d1915; --ink: #f1ece4; --muted: #b3a99c; --line: #3a332b; --field: #15120f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.5); color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
@@ -128,6 +142,18 @@ label.btn { display: inline-block; }
 .side, .controls { background: var(--sand); border-color: var(--line); }
 .tabbar a[aria-current="page"] { color: var(--brand-dark); border-bottom-color: var(--brand); }
 .tabbar.sub a[aria-current="page"] { background: var(--sand); }
-input[type=number], input[type=search], select { background: #fff; }
+input[type=number], input[type=search], select { background: var(--field); }
 .pair input[type=range], input[type=checkbox] { accent-color: var(--brand); }
 @media (max-width: 600px) { .top { flex-wrap: wrap; gap: 8px; } .top h1 { border-left: 0; padding-left: 0; font-size: 18px; } .top .logo { height: 64px; margin: -17px -15px -17px -17px; } }
+
+/* Theme toggle and the logo version for each theme */
+.themetoggle { margin-left: auto; font: inherit; font-size: 13px; color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.themetoggle:hover { border-color: var(--brand); }
+.top .logo.on-dark { display: none; }
+:root[data-theme="dark"] .top .logo.on-light { display: none; }
+:root[data-theme="dark"] .top .logo.on-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .top .logo.on-light { display: none; }
+  :root:not([data-theme="light"]) .top .logo.on-dark { display: block; }
+}

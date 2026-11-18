@@ -20,6 +20,53 @@ Every output carries `district_code` (3-digit), `muni_code` (5-digit = crosswalk
 | 04 | `04_markets_osm.py` → `04_markets_osm.csv` | OpenStreetMap via Overpass | 1,508 features: `amenity=marketplace`, `landuse=retail/commercial`, and anything named Bazar/Bazaar/Haat/Mandi/बजार/हाट. Codes by point-in-polygon on 01. |
 | 05 | `05_downstream_wards.py` → `05_downstream_wards.csv` | 01–04 | Active river monitors only (`ACTIVE_WINDOW_H=48`), and wards within `MAX_RIVER_KM=25` along the river: one row per monitor × downstream ward (2,059 rows; 188 monitors; 1,293 wards; median 10 wards per monitor). The monitor is snapped to the nearest reach (if that reach drains less than 50 km², the smallest reach of at least 50 km² within 1 km is used instead; see `snap_method`), then the path follows `NEXT_DOWN` until 25 km or the Nepal border (`path_end`). A ward is included if the path crosses it. `river_km` = along-channel km from the snapped monitor to where the path first enters the ward. `markets` lists the 04 names in that ward (`;`-separated), with `n_markets` and `market_ids`. |
 
+## Dashboard: how it is built, hosted and maintained
+
+This section is the hand-over guide for the dashboard in `00_dashboard\` (this folder).
+
+### Principles
+1. **Hosting:** the dashboard is hosted on Cloudflare (Cloudflare Pages), which publishes it straight from the GitHub repository. Every push to the `main` branch updates the live site within a minute or two.
+2. **Accounts:** both the Cloudflare account and the GitHub account that host the dashboard belong to IEN, not to any individual. The GitHub repository is https://github.com/iengovlab/FF-Dashboard.
+3. **Access:** the IEN GitHub account gives our individual GitHub accounts access to the repository (Settings > Collaborators). People edit and push with their own accounts; nobody shares the IEN login.
+4. **One dashboard:** we use a single dashboard for all CRVS work. Each new piece of work is added as a tab (or a sub-tab under an existing tab), not as a new site. Each tab loads its data only when it is first opened, so adding tabs does not slow down the others.
+
+### How the dashboard is built
+- It is a static website: plain HTML, CSS and JavaScript, with no build step and no server code. The browser reads the data files directly (GeoPackage files with sql.js, CSV files with PapaParse) and draws the map with Leaflet. All three libraries load from cdnjs.
+- All paths are relative, so the same folder works locally, on Cloudflare and on any device.
+- Files in `00_dashboard\`:
+
+| Path | Role |
+|---|---|
+| `index.html` | Page layout: header, tab bars and one `<main class="page" data-page="...">` block per tab or sub-tab. |
+| `style.css` | IEN look (terracotta `#CE8769` from the logo, warm beige, Montserrat) with light and dark themes. |
+| `theme.js` | Light/dark toggle in the header. It follows the computer's setting until someone picks a theme, and then remembers that choice in the browser. |
+| `tabs.js` | The list of tabs and sub-tabs (`TABS`). It builds the tab bars, shows the open page and keeps it in the address (`#river-monitors`). |
+| `tabs\river_monitors.js` | Code for the River Monitors tab. |
+| `gpkg.js` | Small reader for GeoPackage geometries. |
+| `serve.js` | Local preview server only (not used online). |
+| `assets\` | IEN logos and fonts, copied from `Nepal_IEN\0_admin\9_logos_letterhead` (see its README). |
+| `data\nepal_map\` | Shared Nepal boundaries with IEN codes (ward, municipality, district, province, country) and the scripts that build them. See its README. |
+| `data\<project folder>\` | Data for one piece of work, e.g. `data\01_2026-10_scoping_ktm\` for this scoping. Each has a README saying where its files are created. |
+
+### Adding a new piece of work (a new tab)
+1. Put its data in a new `data\<project folder>\` with a short README on where the files come from. Reuse `data\nepal_map\` for boundaries instead of copying them.
+2. Add the tab to `TABS` at the top of `tabs.js` (with `subs` for sub-tabs).
+3. Add its `<main class="page" data-page="<tab id>" hidden>` block in `index.html` (for a sub-tab: `data-page="<tab id>/<sub id>"`), and its script tag at the bottom.
+4. Write `tabs\<tab id>.js`. Start loading data inside a `tabshown` listener for that page, as `tabs\river_monitors.js` does, so nothing downloads until someone opens the tab.
+5. Check it locally, then commit and push (below).
+
+### Working on it locally
+1. Get the code: either use this Dropbox folder (it is a git clone), or run `git clone https://github.com/iengovlab/FF-Dashboard.git`.
+2. In `00_dashboard\`, run `node serve.js` and open http://127.0.0.1:8765. Browsers block a double-clicked `index.html` from reading `data\`, so the small server is needed.
+3. Commit and push with your own GitHub account: `git add -A`, `git commit -m "..."`, `git push origin main`. Cloudflare publishes the new version automatically.
+
+### Setting up hosting (one time, by whoever holds the IEN accounts)
+1. In the IEN Cloudflare account: Workers & Pages > Create > Pages > Connect to Git, sign in with the IEN GitHub account, and pick `iengovlab/FF-Dashboard`.
+2. Production branch `main`; framework preset None; build command empty; build output directory `/`.
+3. Save and deploy. Cloudflare gives a `*.pages.dev` address; a custom domain can be added under the project's Custom domains.
+4. Keep files under 25 MB each (Cloudflare Pages limit). Today the largest is `data\nepal_map\nepal_wards_2026.gpkg` at about 47 MB, so it has to be made smaller (for example simplified, or split by province) before the move to Cloudflare. GitHub also warns above 50 MB and refuses files above 100 MB.
+5. In the IEN GitHub account, add each team member under the repository's Settings > Collaborators.
+
 ## Files in `5_documentation\01_2026-10_scoping_ktm\`
 
 | File | Content |
