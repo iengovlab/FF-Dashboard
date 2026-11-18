@@ -75,13 +75,3 @@ When a piece of work is finished, set `archived: true` on its entry in `TABS` (`
 | File | Content |
 |---|---|
 | `00_dashboard\` | Interactive map dashboard of the outputs, and this overview (`index.html`, with its own copy of the data: 01 as `00_dashboard\data\nepal_map\nepal_wards_2026_prov1.gpkg` to `_prov7.gpkg` (one per province), shared across dashboards and rebuilt by `nepal_wards_2026.py` next to them; 02–05 in `00_dashboard\data\01_2026-10_scoping_ktm\`). View it online through Cloudflare Pages (see the dashboard section above), or locally with `node serve.js`. The code is hosted in the IEN GitHub account at https://github.com/iengovlab/FF-Dashboard; accounts with access to that repo can push changes. |
-| `spotchecks\02_spot_check_05.py` | Check script (read only on 01–05). Run: `uv run spotchecks\02_spot_check_05.py`. |
-| `spotchecks\02_spot_check_05.md` | Results for 05: integrity, random sample, upstream and distance checks, map lookups. |
-| `spotchecks\02_spot_check_05_sample.csv` | The 15 sampled 05 rows with every check value. |
-| `spotchecks\02_spot_check_05_cap_issues.csv` | Monitors whose ward list disagrees with my own 25 km trace (header only = none). |
-| `spotchecks\02_spot_check_05_snapping.csv` | Per-monitor snapping check (flags a monitor snapped to a minor stream). |
-| `spotchecks\02_spot_check_summary.json` | All counts quoted in 02 and 03. |
-| `spotchecks\03_spot_check_other_datasets.md` | Results for 01, 03 and 04. |
-| `spotchecks\03_spot_check_sample_03_monitors.csv`, `spotchecks\03_spot_check_sample_04_markets.csv` | Random samples used for the lookups. |
-
-Note: OpenStreetMap, Google Maps and Nominatim can't be reached from the checking environment. The "independent map" step therefore used web search and Wikipedia coordinates, plus a recompute of the GIS steps with separate code.
