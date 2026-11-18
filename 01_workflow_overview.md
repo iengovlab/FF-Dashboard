@@ -28,7 +28,7 @@ This section is the hand-over guide for the dashboard in `00_dashboard\` (this f
 1. **Hosting:** the dashboard is hosted on Cloudflare (Cloudflare Pages), which publishes it straight from the GitHub repository. Every push to the `main` branch updates the live site within a minute or two.
 2. **Accounts:** both the Cloudflare account and the GitHub account that host the dashboard belong to IEN, not to any individual. The GitHub repository is https://github.com/iengovlab/FF-Dashboard.
 3. **Access:** the IEN GitHub account gives our individual GitHub accounts access to the repository (Settings > Collaborators). People edit and push with their own accounts; nobody shares the IEN login.
-4. **One dashboard:** we use a single dashboard for all CRVS work. Each new piece of work is added as a tab (or a sub-tab under an existing tab), not as a new site. Each tab loads its data only when it is first opened, so adding tabs does not slow down the others.
+4. **One dashboard:** we use a single dashboard for all project work. Each new piece of work is added as a tab (or a sub-tab under an existing tab), not as a new site. Each tab loads its data only when it is first opened, so adding tabs does not slow down the others.
 
 ### How the dashboard is built
 - It is a static website: plain HTML, CSS and JavaScript, with no build step and no server code. The browser reads the data files directly (GeoPackage files with sql.js, CSV files with PapaParse) and draws the map with Leaflet. All three libraries load from cdnjs.
