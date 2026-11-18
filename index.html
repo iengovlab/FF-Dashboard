@@ -38,40 +38,6 @@
     <label for="q">Search monitor, district or palika</label>
     <input type="search" id="q" placeholder="e.g. Bagmati, Kathmandu, Lalitpur">
   </div>
-  <div class="ctl">
-    <span class="lbl">Show on map</span>
-    <div class="checks">
-      <label><input type="checkbox" id="lyMk" checked> markets <span class="hint">(zoom in)</span></label>
-      <label><input type="checkbox" id="lyRiver" checked> river monitors</label>
-      <label><input type="checkbox" id="lyPath" checked> downstream river path</label>
-      <label><input type="checkbox" id="lyWards" checked> ward boundaries</label>
-      <label><input type="checkbox" id="lyRain"> rain monitors</label>
-      <label><input type="checkbox" id="lyInRiver"> inactive river monitors</label>
-      <label><input type="checkbox" id="lyInRain"> inactive rain monitors</label>
-    </div>
-  </div>
-  <div class="ctl flood">
-    <label class="lbl"><input type="checkbox" id="lyFlood"> Flood hazard map <span class="hint">(METEOR, water depth)</span></label>
-    <div class="pair">
-      <select id="floodType" aria-label="Flood type">
-        <option value="fd">River flooding, with flood defences</option>
-        <option value="fu">River flooding, without flood defences</option>
-        <option value="p">Heavy-rain (surface water) flooding</option>
-      </select>
-      <select id="floodRp" aria-label="How rare a flood">
-        <option value="1in5">1-in-5 year flood (20% chance a year)</option>
-        <option value="1in10">1-in-10 year flood (10% chance a year)</option>
-        <option value="1in20">1-in-20 year flood (5% chance a year)</option>
-        <option value="1in50">1-in-50 year flood (2% chance a year)</option>
-        <option value="1in75">1-in-75 year flood (1.3% chance a year)</option>
-        <option value="1in100" selected>1-in-100 year flood (1% chance a year)</option>
-        <option value="1in200">1-in-200 year flood (0.5% chance a year)</option>
-        <option value="1in250">1-in-250 year flood (0.4% chance a year)</option>
-        <option value="1in500">1-in-500 year flood (0.2% chance a year)</option>
-        <option value="1in1000">1-in-1000 year flood (0.1% chance a year)</option>
-      </select>
-    </div>
-  </div>
   <button id="reset" class="btn ghost" type="button">Reset</button>
   <details class="limits">
     <summary>About this data</summary>
@@ -85,13 +51,49 @@
       <li>Base maps: OpenStreetMap contributors; satellite imagery: Esri</li>
     </ul>
     <p><b>Method</b>: a place is listed if the river downstream of a monitor passes through it, up to <span class="kmMax">100</span> km along the river, for monitors that reported within the last <span class="hMax">168</span> hours.</p>
-    <p class="maint">For maintainers: the filters can only narrow the pre-computed data in <code>data/01_2026-10_scoping_ktm/</code>. To go further, change <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> in the pipeline scripts and re-export.</p>
+    <p class="maint">For maintainers: the filters can only narrow the pre-computed data in <code>data/</code>. To go further, change <code>MAX_RIVER_KM</code> / <code>ACTIVE_WINDOW_H</code> in the pipeline scripts and re-export.</p>
   </details>
 </section>
 
 <section class="tiles" id="tiles" aria-live="polite"></section>
 
 <section class="main">
+  <aside class="side" aria-label="Map layers">
+    <div class="ctl">
+      <span class="lbl">Show on map</span>
+      <div class="checks">
+        <label><input type="checkbox" id="lyMk" checked> markets <span class="hint">(zoom in)</span></label>
+        <label><input type="checkbox" id="lyRiver" checked> river monitors</label>
+        <label><input type="checkbox" id="lyPath" checked> downstream river path</label>
+        <label><input type="checkbox" id="lyWards" checked> ward boundaries</label>
+        <label><input type="checkbox" id="lyRain"> rain monitors</label>
+        <label><input type="checkbox" id="lyInRiver"> inactive river monitors</label>
+        <label><input type="checkbox" id="lyInRain"> inactive rain monitors</label>
+      </div>
+    </div>
+    <div class="ctl flood">
+      <label class="lbl"><input type="checkbox" id="lyFlood"> Flood hazard map <span class="hint">(METEOR, water depth)</span></label>
+      <div class="pair">
+        <select id="floodType" aria-label="Flood type">
+          <option value="fd">River flooding, with flood defences</option>
+          <option value="fu">River flooding, without flood defences</option>
+          <option value="p">Heavy-rain (surface water) flooding</option>
+        </select>
+        <select id="floodRp" aria-label="How rare a flood">
+          <option value="1in5">1-in-5 year flood (20% chance a year)</option>
+          <option value="1in10">1-in-10 year flood (10% chance a year)</option>
+          <option value="1in20">1-in-20 year flood (5% chance a year)</option>
+          <option value="1in50">1-in-50 year flood (2% chance a year)</option>
+          <option value="1in75">1-in-75 year flood (1.3% chance a year)</option>
+          <option value="1in100" selected>1-in-100 year flood (1% chance a year)</option>
+          <option value="1in200">1-in-200 year flood (0.5% chance a year)</option>
+          <option value="1in250">1-in-250 year flood (0.4% chance a year)</option>
+          <option value="1in500">1-in-500 year flood (0.2% chance a year)</option>
+          <option value="1in1000">1-in-1000 year flood (0.1% chance a year)</option>
+        </select>
+      </div>
+    </div>
+  </aside>
   <div id="map" role="region" aria-label="Map"></div>
 </section>
 

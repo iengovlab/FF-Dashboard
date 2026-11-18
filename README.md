@@ -1,11 +1,11 @@
 # Downstream places dashboard
 
 Pick a river monitor on the map to see the wards downstream of it and the markets there.
-It is a static page: `index.html` + `app.js` + `gpkg.js` + `style.css`, reading the files in `data/01_2026-10_scoping_ktm/`.
+It is a static page: `index.html` + `app.js` + `gpkg.js` + `style.css`, reading the files in `data/` (all read-only, nothing is saved):
+- `data/nepal_map/`: shared Nepal boundaries with IEN codes (`nepal_wards_2026.gpkg`), reusable by any dashboard. See its README.
+- `data/01_2026-10_scoping_ktm/`: files for the 2026-10 scoping activity (`02_rivers_hydrorivers.gpkg`, `03_monitors_bipad.csv`, `04_markets_osm.csv`, `05_downstream_wards.csv`). See its README.
 
-Data files in `data/01_2026-10_scoping_ktm/` (all read-only, nothing is saved):
-- `01_wards_nepal.gpkg`, `02_rivers_hydrorivers.gpkg`
-- `03_monitors_bipad.csv`, `04_markets_osm.csv`, `05_downstream_wards.csv`
+For a new project, add a `data/<project>/` folder and change `PROJECT` and `NEED` at the top of `app.js`.
 
 The optional flood hazard layer is loaded live from maps.meteor-project.org (METEOR / Fathom, ODbL), so it needs internet.
 
@@ -13,5 +13,5 @@ The optional flood hazard layer is loaded live from maps.meteor-project.org (MET
 Publish with GitHub Pages (repo Settings > Pages > deploy from the main branch, root folder).
 
 ## View locally
-Browsers block a double-clicked page from reading `data/01_2026-10_scoping_ktm/`, so run `node serve.js` in this folder
+Browsers block a double-clicked page from reading `data/`, so run `node serve.js` in this folder
 and open http://127.0.0.1:8765

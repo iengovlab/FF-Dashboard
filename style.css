@@ -99,3 +99,13 @@ label.btn { display: inline-block; }
 
 .limits ul { margin: 4px 0 8px; padding-left: 18px; }
 .limits .maint { opacity: .8; }
+
+/* Map layers sidebar */
+.main { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 12px; align-items: start; }
+.side { display: flex; flex-direction: column; gap: 16px; padding: 14px 16px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.side .ctl { min-width: 0; width: 100%; }
+.side .checks { flex-direction: column; gap: 6px; }
+.side .pair { flex-direction: column; align-items: stretch; }
+.side select { width: 100%; }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }

@@ -1,4 +1,4 @@
-/* Downstream places dashboard. Reads the pipeline outputs in ./data in the browser; nothing is written anywhere.
+/* Downstream places dashboard. Reads the files in ./data in the browser; nothing is written anywhere.
    Rows and wards come straight from 05_downstream_wards.csv; the controls only filter it. */
 (function () {
   "use strict";
@@ -7,7 +7,9 @@
   // Filter values on load and on Reset
   const KM_DEF = 25, H_DEF = 168;
   const MK_MIN_ZOOM = 12; // markets are drawn only at this map zoom or closer
-  const NEED = ["01_wards_nepal.gpkg", "02_rivers_hydrorivers.gpkg", "03_monitors_bipad.csv", "04_markets_osm.csv", "05_downstream_wards.csv"];
+  // Shared Nepal boundaries live in data/nepal_map; project-specific files in data/<project folder>
+  const PROJECT = "data/01_2026-10_scoping_ktm/";
+  const NEED = ["data/nepal_map/nepal_wards_2026.gpkg", PROJECT + "02_rivers_hydrorivers.gpkg", PROJECT + "03_monitors_bipad.csv", PROJECT + "04_markets_osm.csv", PROJECT + "05_downstream_wards.csv"];
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmt = (n) => Number(n).toLocaleString("en-US");
@@ -24,13 +26,14 @@
   document.querySelectorAll(".kmMax").forEach((e) => (e.textContent = KM_MAX));
   document.querySelectorAll(".hMax").forEach((e) => (e.textContent = H_MAX));
 
-  // data files sit in ./data next to this page; fetched as Blobs so the readers below work unchanged
+  // data files sit in ./data next to this page (keyed below by file name); fetched as Blobs so the readers below work unchanged
   (async () => {
     try {
       const files = {};
-      for (const n of NEED) {
+      for (const p of NEED) {
+        const n = p.split("/").pop();
         status("Downloading " + n + "…");
-        const r = await fetch("data/01_2026-10_scoping_ktm/" + n);
+        const r = await fetch(p);
         if (!r.ok) throw new Error(n + " not found in the data folder (HTTP " + r.status + ")");
         files[n] = await r.blob();
       }
@@ -47,7 +50,7 @@
     const SQL = await initSqlJs({ locateFile: (f) => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/" + f });
     const wardCodes = [...new Set(r05.map((r) => r.ward_code))].filter(Boolean);
     status(`Reading ward polygons for ${fmt(wardCodes.length)} wards…`);
-    const wdb = new SQL.Database(new Uint8Array(await files["01_wards_nepal.gpkg"].arrayBuffer()));
+    const wdb = new SQL.Database(new Uint8Array(await files["nepal_wards_2026.gpkg"].arrayBuffer()));
     const wards = {};
     const ws = wdb.prepare(`SELECT ward_code, geom FROM wards WHERE ward_code IN (${wardCodes.map(Number).join(",")})`);
     while (ws.step()) { const [c, g] = ws.get(); wards[c] = thin(GPKG.parse(g)); }
