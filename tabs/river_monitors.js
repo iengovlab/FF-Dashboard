@@ -1,4 +1,4 @@
-/* Downstream places dashboard. Reads the files in ./data in the browser; nothing is written anywhere.
+/* Tab "River Monitors": monitors and downstream places. Reads the files in ./data in the browser; nothing is written anywhere.
    Rows and wards come straight from 05_downstream_wards.csv; the controls only filter it. */
 (function () {
   "use strict";
@@ -7,9 +7,18 @@
   // Filter values on load and on Reset
   const KM_DEF = 25, H_DEF = 168;
   const MK_MIN_ZOOM = 12; // markets are drawn only at this map zoom or closer
+  // Nepal boundary outlines (sidebar checkboxes): file and table in NEPAL_MAP, fetched the first time they are switched on
+  const BOUNDARIES = [
+    { id: "lyCountry", file: "nepal_country_2026.gpkg", table: "country", weight: 2.6 },
+    { id: "lyProv", file: "nepal_prov_2026.gpkg", table: "provinces", weight: 2 },
+    { id: "lyDist", file: "nepal_dist_2026.gpkg", table: "districts", weight: 1.3 },
+    { id: "lyMuni", file: "nepal_muni_2026.gpkg", table: "munis", weight: 0.7, dash: "3 3" },
+  ];
+  let SQL = null; // sql.js, kept for the boundary files
   // Shared Nepal boundaries live in data/nepal_map; project-specific files in data/<project folder>
+  const NEPAL_MAP = "data/nepal_map/";
   const PROJECT = "data/01_2026-10_scoping_ktm/";
-  const NEED = ["data/nepal_map/nepal_wards_2026.gpkg", PROJECT + "02_rivers_hydrorivers.gpkg", PROJECT + "03_monitors_bipad.csv", PROJECT + "04_markets_osm.csv", PROJECT + "05_downstream_wards.csv"];
+  const NEED = [NEPAL_MAP + "nepal_wards_2026.gpkg", PROJECT + "02_rivers_hydrorivers.gpkg", PROJECT + "03_monitors_bipad.csv", PROJECT + "04_markets_osm.csv", PROJECT + "05_downstream_wards.csv"];
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmt = (n) => Number(n).toLocaleString("en-US");
@@ -47,7 +56,7 @@
     status("Reading CSV files…");
     const [m03, m04, r05] = await Promise.all([csv(files["03_monitors_bipad.csv"]), csv(files["04_markets_osm.csv"]), csv(files["05_downstream_wards.csv"])]);
     status("Loading GeoPackage reader…");
-    const SQL = await initSqlJs({ locateFile: (f) => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/" + f });
+    SQL = await initSqlJs({ locateFile: (f) => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/" + f });
     const wardCodes = [...new Set(r05.map((r) => r.ward_code))].filter(Boolean);
     status(`Reading ward polygons for ${fmt(wardCodes.length)} wards…`);
     const wdb = new SQL.Database(new Uint8Array(await files["nepal_wards_2026.gpkg"].arrayBuffer()));
@@ -145,6 +154,8 @@
     // ---- map
     $("loader").hidden = true; $("app").hidden = false;
     const map = L.map("map", { preferCanvas: true }).setView([28.2, 84.1], 7);
+    // the map is sized while its tab may be hidden; re-measure whenever this tab is shown
+    document.addEventListener("tabshown", (e) => { if (e.detail === "river-monitors") map.invalidateSize(); });
     // OSM tiles need a Referer: fine on GitHub Pages / the local server, blocked when the page is opened from disk
     const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
     const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Imagery &copy; Esri" });
@@ -188,6 +199,28 @@
     $("lyFlood").addEventListener("change", syncFlood);
     // changing the type or rarity turns the layer on, so the choice always has a visible effect
     for (const id of ["floodType", "floodRp"]) $(id).addEventListener("change", () => { $("lyFlood").checked = true; syncFlood(); });
+    // Nepal boundaries: outlines only, not clickable, so the monitors and wards underneath stay usable
+    const gBound = {};
+    async function syncBoundary(b) {
+      const box = $(b.id);
+      if (!box.checked) { if (gBound[b.id]) map.removeLayer(gBound[b.id]); return; }
+      if (!gBound[b.id]) {
+        const lbl = box.parentElement, txt = lbl.lastChild.textContent;
+        lbl.lastChild.textContent = txt + " (loading…)"; box.disabled = true;
+        try {
+          const r = await fetch(NEPAL_MAP + b.file);
+          if (!r.ok) throw new Error(b.file + " not found (HTTP " + r.status + ")");
+          const db = new SQL.Database(new Uint8Array(await r.arrayBuffer()));
+          const g = L.layerGroup(), q = db.prepare(`SELECT geom FROM "${b.table}"`);
+          while (q.step()) L.polygon(thin(GPKG.parse(q.get()[0])), { color: css("--admin-line"), weight: b.weight, dashArray: b.dash, fill: false, interactive: false }).addTo(g);
+          q.free(); db.close(); gBound[b.id] = g;
+        } catch (err) { console.error(err); box.checked = false; }
+        finally { lbl.lastChild.textContent = txt; box.disabled = false; }
+      }
+      if (box.checked && gBound[b.id]) map.addLayer(gBound[b.id]);
+    }
+    for (const b of BOUNDARIES) $(b.id).addEventListener("change", () => syncBoundary(b));
+    for (const b of BOUNDARIES) if ($(b.id).checked) syncBoundary(b);
     // selection box: says how to filter, and resets the filter (the only way to clear it besides Reset)
     const selBox = L.control({ position: "topright" });
     selBox.onAdd = () => { const d = L.DomUtil.create("div", "mapsel"); L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);

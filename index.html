@@ -3,17 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Downstream Places Dashboard</title>
+<title>IEN Floods-Firms Dashboard</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="top">
-  <div>
-    <h1>River monitors &amp; downstream places</h1>
-    <p class="sub">Click a river monitor on the map to see the places downstream of it, and the markets there.</p>
-  </div>
+  <h1>IEN Floods-Firms Dashboard</h1>
 </header>
+<!-- tab and sub-tab bars are built by tabs.js from its TABS list -->
+<nav id="tabbar" class="tabbar" aria-label="Dashboard sections"></nav>
+<nav id="subtabbar" class="tabbar sub" aria-label="Sub-sections" hidden></nav>
+
+<!-- ===== Tab: River Monitors (code: tabs/river_monitors.js) ===== -->
+<main class="page" data-page="river-monitors" hidden>
+<div class="pagehead">
+  <h2>River monitors &amp; downstream places</h2>
+  <p class="sub">Click a river monitor on the map to see the places downstream of it, and the markets there.</p>
+</div>
 
 <section id="loader" class="loader">
   <h2>Loading data…</h2>
@@ -60,12 +67,21 @@
 <section class="main">
   <aside class="side" aria-label="Map layers">
     <div class="ctl">
+      <span class="lbl">Nepal boundaries</span>
+      <div class="checks">
+        <label><input type="checkbox" id="lyCountry"> Country</label>
+        <label><input type="checkbox" id="lyProv"> Province</label>
+        <label><input type="checkbox" id="lyDist"> District</label>
+        <label><input type="checkbox" id="lyMuni"> Municipality (palika)</label>
+        <label><input type="checkbox" id="lyWards" checked> Ward <span class="hint">(downstream places)</span></label>
+      </div>
+    </div>
+    <div class="ctl">
       <span class="lbl">Show on map</span>
       <div class="checks">
         <label><input type="checkbox" id="lyMk" checked> markets <span class="hint">(zoom in)</span></label>
         <label><input type="checkbox" id="lyRiver" checked> river monitors</label>
         <label><input type="checkbox" id="lyPath" checked> downstream river path</label>
-        <label><input type="checkbox" id="lyWards" checked> ward boundaries</label>
         <label><input type="checkbox" id="lyRain"> rain monitors</label>
         <label><input type="checkbox" id="lyInRiver"> inactive river monitors</label>
         <label><input type="checkbox" id="lyInRain"> inactive rain monitors</label>
@@ -117,11 +133,13 @@
 
 <footer id="foot"></footer>
 </div>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <script src="gpkg.js"></script>
-<script src="app.js"></script>
+<script src="tabs.js"></script>
+<script src="tabs/river_monitors.js"></script>
 </body>
 </html>
