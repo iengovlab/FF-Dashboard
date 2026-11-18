@@ -1,16 +1,33 @@
-# 01 Workflow overview: station mapping (2026-10 scoping)
+# AGENTS.md: IEN Floods-Firms project context
+
+Read this file first. It is the shared context and memory for anyone working on this dashboard, people and AI agents alike. Keep it current: when a decision is made, a rule changes or a new piece of work starts, update the matching section and add a line to the change log at the end.
+
+## Project in brief
+- **Who:** Inclusion Economics Nepal (IEN), Floods-Firms project.
+- **What this folder is:** the single IEN Floods-Firms Dashboard (`00_dashboard\`, git repo https://github.com/iengovlab/FF-Dashboard). All project work goes into this one dashboard as tabs or sub-tabs.
+- **Live site:** https://iengovlab.github.io/FF-Dashboard/ (GitHub Pages for now; Cloudflare Pages is the plan, see Hosting below).
+
+## Working rules
+- Use relative paths only, so everything runs on any device.
+- Keep code and data apart as usual at IEN (`1_do\` scripts, `2_raw\` outputs, `5_documentation\` notes). Exception: `data\nepal_map\` keeps its scripts next to the files they build, so it can be reused as is.
+- Name each script exactly like the file it writes, and keep every data file reproducible from its script and saved raw inputs.
+- Keep every file in the repo under 25 MB (Cloudflare Pages limit); split large files, as the wards are split by province.
+- Leave no temporary or helper files behind.
+- Do not push to GitHub without the project lead's OK; show the git commands first.
+
+## 2026-10 scoping: station mapping
 
 Goal: list BIPAD river and rain monitoring stations, then, for each river station, list the wards downstream along the river with the along-river distance and the markets in each ward.
 
 Folders (under `C:\Users\Anubhav\Dropbox\Nepal_Floods\2_Data`):
-- Documentation: `5_documentation\01_2026-10_scoping_ktm\` (this file is in its `00_dashboard\`)
+- Documentation: `5_documentation\01_2026-10_scoping_ktm\` (this file, `AGENTS.md`, is in its `00_dashboard\`)
 - Scripts: `1_do\01_2026-10_scoping_ktm\` (each `.py` is named exactly like the file it writes; run in number order with `uv run <script>`)
 - Outputs: `2_raw\01_2026-10_scoping_ktm\` (downloaded sources cached in `_source\`)
 - Codes: `2_raw\00_crosswalk\master_crosswalk_prov_dist_mun.xlsx` (read only)
 
 Every output carries `district_code` (3-digit), `muni_code` (5-digit = crosswalk `municipality_code`) and `ward_code` = muni_code × 100 + ward no. (for example 1010501).
 
-## Pipeline
+### Pipeline
 
 | # | Script → output | Source | What it does |
 |---|---|---|---|
@@ -63,7 +80,10 @@ When a piece of work is finished, set `archived: true` on its entry in `TABS` (`
 2. In `00_dashboard\`, run `node serve.js` and open http://127.0.0.1:8765. Browsers block a double-clicked `index.html` from reading `data\`, so the small server is needed.
 3. Commit and push with your own GitHub account: `git add -A`, `git commit -m "..."`, `git push origin main`. Cloudflare publishes the new version automatically.
 
-### Setting up hosting (one time, by whoever holds the IEN accounts)
+### Hosting
+Today the site is served by GitHub Pages from the `main` branch: https://iengovlab.github.io/FF-Dashboard/. The plan is to move it to Cloudflare Pages on the IEN Cloudflare account, connected to the same repository.
+
+#### Setting up Cloudflare Pages (one time, by whoever holds the IEN accounts)
 1. In the IEN Cloudflare account: Workers & Pages > Create > Pages > Connect to Git, sign in with the IEN GitHub account, and pick `iengovlab/FF-Dashboard`.
 2. Production branch `main`; framework preset None; build command empty; build output directory `/`.
 3. Save and deploy. Cloudflare gives a `*.pages.dev` address; a custom domain can be added under the project's Custom domains.
@@ -74,4 +94,9 @@ When a piece of work is finished, set `archived: true` on its entry in `TABS` (`
 
 | File | Content |
 |---|---|
-| `00_dashboard\` | Interactive map dashboard of the outputs, and this overview (`index.html`, with its own copy of the data: 01 as `00_dashboard\data\nepal_map\nepal_wards_2026_prov1.gpkg` to `_prov7.gpkg` (one per province), shared across dashboards and rebuilt by `nepal_wards_2026.py` next to them; 02–05 in `00_dashboard\data\01_2026-10_scoping_ktm\`). View it online through Cloudflare Pages (see the dashboard section above), or locally with `node serve.js`. The code is hosted in the IEN GitHub account at https://github.com/iengovlab/FF-Dashboard; accounts with access to that repo can push changes. |
+| `00_dashboard\` | Interactive map dashboard of the outputs, and this file (`index.html`, with its own copy of the data: 01 as `00_dashboard\data\nepal_map\nepal_wards_2026_prov1.gpkg` to `_prov7.gpkg` (one per province), shared across dashboards and rebuilt by `nepal_wards_2026.py` next to them; 02–05 in `00_dashboard\data\01_2026-10_scoping_ktm\`). View it online through Cloudflare Pages (see the dashboard section above), or locally with `node serve.js`. The code is hosted in the IEN GitHub account at https://github.com/iengovlab/FF-Dashboard; accounts with access to that repo can push changes. |
+
+## Change log
+Newest first. Add a line for every change that matters to the next person.
+- 2026-11-18: Dashboard reorganised: folder renamed `00_dashboard\`; shared Nepal boundaries in `data\nepal_map\` (ward, municipality, district, province, country; wards split by province; scripts pinned and rebuild verified); scoping data in `data\01_2026-10_scoping_ktm\`; tabs with an Archived dropdown; IEN theme with logo, Montserrat and a dark mode; data loads only for open tabs. This file renamed from `01_workflow_overview.md` to `AGENTS.md`; spot checks documented separately in `..\spotchecks\01_spotchecks_overview.md`.
+- 2026-10: Scoping pipeline 01 to 05 and the first dashboard.

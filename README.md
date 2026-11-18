@@ -18,7 +18,7 @@ For a new project, add a `data/<project>/` folder and point the new tab's code a
 The optional flood hazard layer is loaded live from maps.meteor-project.org (METEOR / Fathom, ODbL), so it needs internet.
 
 ## View online
-Hosted on Cloudflare Pages from this GitHub repository (IEN accounts); every push to `main` publishes it. Setup steps, access and the hand-over guide are in `01_workflow_overview.md`.
+Hosted on Cloudflare Pages from this GitHub repository (IEN accounts); every push to `main` publishes it. Setup steps, access and the hand-over guide are in `AGENTS.md`.
 
 ## View locally
 Browsers block a double-clicked page from reading `data/`, so run `node serve.js` in this folder
