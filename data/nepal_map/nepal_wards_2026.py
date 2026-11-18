@@ -1,7 +1,7 @@
 # ==============================================================================
 # nepal_wards_2026.py
 #
-# Stand-alone builder for nepal_wards_2026.gpkg (this folder). Shared Nepal ward
+# Stand-alone builder for nepal_wards_2026_prov1..7.gpkg (this folder). Shared Nepal ward
 # boundaries with IEN codes, for use across dashboards.
 #
 # IMPORTS (python): re, sys, difflib, unicodedata, pathlib, requests, pandas, geopandas
@@ -14,7 +14,7 @@
 #   raw/sd_geoportal_wards.geojson                  (downloaded from nationalgeoportal.gov.np WFS if missing)
 #
 # OUTPUTS (paths relative to this script):
-#   nepal_wards_2026.gpkg              (layer 'wards')
+#   nepal_wards_2026_prov1.gpkg ... nepal_wards_2026_prov7.gpkg  (layer 'wards', one file per province)
 #   raw/nepal_wards_2026_match.csv  (not committed, see .gitignore)
 #   raw/nepal_wards_2026_checks.csv (not committed, see .gitignore)
 # ==============================================================================
@@ -23,13 +23,14 @@
 # dependencies = ["requests", "pandas", "geopandas", "shapely", "pyogrio", "openpyxl"]
 # ///
 """
-nepal_wards_2026.py -> nepal_wards_2026.gpkg
+nepal_wards_2026.py -> nepal_wards_2026_prov1.gpkg ... nepal_wards_2026_prov7.gpkg
 
 Ward polygons for all of Nepal from the Survey Department's National Geoportal
 (WFS layer geonode:ward_nameupdated_wgs, EPSG:4326), with codes from the master
 crosswalk:
   district_code (3-digit), muni_code (5-digit = crosswalk municipality_code),
-  ward_code = muni_code*100 + ward_no.
+  ward_code = muni_code*100 + ward_no; province_code = district_code // 100 (1-7).
+One file per province keeps each file well under the 25 MB file limit of Cloudflare Pages.
 
 Survey Dept palikas are matched to the crosswalk by normalized names within
 district (exact -> phonetic -> fuzzy), never by the Survey Dept numeric codes,
@@ -286,9 +287,12 @@ def main():
     print(f"ward count differs from crosswalk n_wards: {chk.flag_nwards.sum()} (of {chk.n_wards.notna().sum()} with n_wards)")
     print(f"wards: {out.is_ward.sum()}  with ward_code: {out.ward_code.notna().sum()}  total wards expected ~6743")
 
-    f = OUT / "nepal_wards_2026.gpkg"
-    out.to_file(f, layer="wards", driver="GPKG")
-    print("wrote", f, len(out))
+    # one file per province (district_code's first digit is the province number)
+    out.insert(0, "province_code", (out.district_code // 100).astype("Int64"))
+    for pc, part in out.groupby("province_code"):
+        f = OUT / f"nepal_wards_2026_prov{pc}.gpkg"
+        part.reset_index(drop=True).to_file(f, layer="wards", driver="GPKG")
+        print("wrote", f, len(part))
 
 
 if __name__ == "__main__":

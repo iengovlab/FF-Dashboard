@@ -64,14 +64,14 @@ This section is the hand-over guide for the dashboard in `00_dashboard\` (this f
 1. In the IEN Cloudflare account: Workers & Pages > Create > Pages > Connect to Git, sign in with the IEN GitHub account, and pick `iengovlab/FF-Dashboard`.
 2. Production branch `main`; framework preset None; build command empty; build output directory `/`.
 3. Save and deploy. Cloudflare gives a `*.pages.dev` address; a custom domain can be added under the project's Custom domains.
-4. Keep files under 25 MB each (Cloudflare Pages limit). Today the largest is `data\nepal_map\nepal_wards_2026.gpkg` at about 47 MB, so it has to be made smaller (for example simplified, or split by province) before the move to Cloudflare. GitHub also warns above 50 MB and refuses files above 100 MB.
+4. Keep every file under 25 MB (Cloudflare Pages limit; GitHub also warns above 50 MB). This is why the ward boundaries are split into one file per province (`nepal_wards_2026_prov1.gpkg` to `_prov7.gpkg`, 6 to 9 MB each); the largest file today is `nepal_muni_2026.gpkg` at about 18 MB. Split any new large file the same way.
 5. In the IEN GitHub account, add each team member under the repository's Settings > Collaborators.
 
 ## Files in `5_documentation\01_2026-10_scoping_ktm\`
 
 | File | Content |
 |---|---|
-| `00_dashboard\` | Interactive map dashboard of the outputs, and this overview (`index.html`, with its own copy of the data: 01 as `00_dashboard\data\nepal_map\nepal_wards_2026.gpkg`, shared across dashboards and rebuilt by `nepal_wards_2026.py` next to it; 02–05 in `00_dashboard\data\01_2026-10_scoping_ktm\`). View it online through GitHub Pages, or locally with `node serve.js`. The code is hosted in the IEN GitHub account at https://github.com/iengovlab/FF-Dashboard; accounts with access to that repo can push changes. |
+| `00_dashboard\` | Interactive map dashboard of the outputs, and this overview (`index.html`, with its own copy of the data: 01 as `00_dashboard\data\nepal_map\nepal_wards_2026_prov1.gpkg` to `_prov7.gpkg` (one per province), shared across dashboards and rebuilt by `nepal_wards_2026.py` next to them; 02–05 in `00_dashboard\data\01_2026-10_scoping_ktm\`). View it online through Cloudflare Pages (see the dashboard section above), or locally with `node serve.js`. The code is hosted in the IEN GitHub account at https://github.com/iengovlab/FF-Dashboard; accounts with access to that repo can push changes. |
 | `spotchecks\02_spot_check_05.py` | Check script (read only on 01–05). Run: `uv run spotchecks\02_spot_check_05.py`. |
 | `spotchecks\02_spot_check_05.md` | Results for 05: integrity, random sample, upstream and distance checks, map lookups. |
 | `spotchecks\02_spot_check_05_sample.csv` | The 15 sampled 05 rows with every check value. |

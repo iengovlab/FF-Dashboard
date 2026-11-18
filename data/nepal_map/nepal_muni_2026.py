@@ -6,7 +6,7 @@
 # IMPORTS (python): sys, pathlib, pandas, geopandas
 #
 # INPUTS (paths relative to this script):
-#   nepal_wards_2026.gpkg                    (layer 'wards', from nepal_wards_2026.py)
+#   nepal_wards_2026_prov1..7.gpkg           (layer 'wards', from nepal_wards_2026.py)
 #   raw/master_crosswalk_prov_dist_mun.xlsx  (IEN code crosswalk, read only; see README).
 #     If missing, <Nepal_Floods>/2_raw/00_crosswalk/ is found by walking up from this script;
 #     or pass the path as the first argument: uv run nepal_muni_2026.py <crosswalk.xlsx>
@@ -21,7 +21,7 @@
 """
 nepal_muni_2026.py -> nepal_muni_2026.gpkg
 
-Municipality (palika) polygons: the wards of nepal_wards_2026.gpkg (is_ward=1)
+Municipality (palika) polygons: the wards of nepal_wards_2026_prov*.gpkg (is_ward=1)
 dissolved by muni_code. Protected-area pieces (is_ward=0) belong to no palika and
 are left out. Province from the crosswalk (province_id; province 1 is named Koshi).
 Columns: province_code, province_name, district_code, district_name, muni_code,
@@ -37,7 +37,7 @@ import geopandas as gpd
 OUT = Path(__file__).resolve().parent
 SRC = OUT / "raw"
 CW_REL = Path("2_raw") / "00_crosswalk" / "master_crosswalk_prov_dist_mun.xlsx"
-WARDS = OUT / "nepal_wards_2026.gpkg"
+WARDS = sorted(OUT.glob("nepal_wards_2026_prov*.gpkg"))  # one ward file per province
 
 
 # The Survey Dept wards leave a few hair-line gaps (< 5 m2) between neighbours, which turn
@@ -82,7 +82,7 @@ def provinces(cw):
 
 def main():
     cw = pd.read_excel(find_crosswalk(), sheet_name="Sheet1")
-    w = gpd.read_file(WARDS, layer="wards")
+    w = gpd.GeoDataFrame(pd.concat([gpd.read_file(f, layer="wards") for f in WARDS], ignore_index=True))
     w = w[w.is_ward == 1]
     out = w.dissolve(by="muni_code", as_index=False,
                      aggfunc={"district_code": "first", "district_name": "first", "muni_name": "first",

@@ -18,7 +18,9 @@
   // Shared Nepal boundaries live in data/nepal_map; project-specific files in data/<project folder>
   const NEPAL_MAP = "data/nepal_map/";
   const PROJECT = "data/01_2026-10_scoping_ktm/";
-  const NEED = [NEPAL_MAP + "nepal_wards_2026.gpkg", PROJECT + "02_rivers_hydrorivers.gpkg", PROJECT + "03_monitors_bipad.csv", PROJECT + "04_markets_osm.csv", PROJECT + "05_downstream_wards.csv"];
+  // ward polygons come one file per province (nepal_wards_2026_prov1..7.gpkg); only the provinces with downstream wards are fetched
+  const WARD_FILE = (prov) => NEPAL_MAP + "nepal_wards_2026_prov" + prov + ".gpkg";
+  const NEED = [PROJECT + "02_rivers_hydrorivers.gpkg", PROJECT + "03_monitors_bipad.csv", PROJECT + "04_markets_osm.csv", PROJECT + "05_downstream_wards.csv"];
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmt = (n) => Number(n).toLocaleString("en-US");
@@ -61,12 +63,18 @@
     status("Loading GeoPackage reader…");
     SQL = await initSqlJs({ locateFile: (f) => "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/" + f });
     const wardCodes = [...new Set(r05.map((r) => r.ward_code))].filter(Boolean);
-    status(`Reading ward polygons for ${fmt(wardCodes.length)} wards…`);
-    const wdb = new SQL.Database(new Uint8Array(await files["nepal_wards_2026.gpkg"].arrayBuffer()));
+    // ward_code = muni_code*100 + ward no., and the muni_code's first digit is the province
+    const provs = [...new Set(wardCodes.map((c) => String(c)[0]))].sort();
     const wards = {};
-    const ws = wdb.prepare(`SELECT ward_code, geom FROM wards WHERE ward_code IN (${wardCodes.map(Number).join(",")})`);
-    while (ws.step()) { const [c, g] = ws.get(); wards[c] = thin(GPKG.parse(g)); }
-    ws.free(); wdb.close();
+    for (const pv of provs) {
+      status(`Reading ward polygons, province ${pv}…`);
+      const r = await fetch(WARD_FILE(pv));
+      if (!r.ok) throw new Error(WARD_FILE(pv) + " not found (HTTP " + r.status + ")");
+      const wdb = new SQL.Database(new Uint8Array(await r.arrayBuffer()));
+      const ws = wdb.prepare(`SELECT ward_code, geom FROM wards WHERE ward_code IN (${wardCodes.map(Number).join(",")})`);
+      while (ws.step()) { const [c, g] = ws.get(); wards[c] = thin(GPKG.parse(g)); }
+      ws.free(); wdb.close();
+    }
     status("Reading river network…");
     const rdb = new SQL.Database(new Uint8Array(await files["02_rivers_hydrorivers.gpkg"].arrayBuffer()));
     const rivers = new Map();

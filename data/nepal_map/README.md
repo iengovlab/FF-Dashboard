@@ -8,7 +8,7 @@ Shared Nepal administrative boundaries with IEN codes. Not tied to any one proje
 
 | # | Script | Creates | Content |
 |---|---|---|---|
-| 1 | `nepal_wards_2026.py` | `nepal_wards_2026.gpkg` (layer `wards`) | 6,748 ward polygons plus 44 protected-area pieces (`is_ward=0`, no `ward_code`). From the Survey Dept Geoportal and the IEN crosswalk. |
+| 1 | `nepal_wards_2026.py` | `nepal_wards_2026_prov1.gpkg` … `nepal_wards_2026_prov7.gpkg` (layer `wards`) | 6,748 ward polygons plus 44 protected-area pieces (`is_ward=0`, no `ward_code`), one file per province (6 to 9 MB each, so every file stays under Cloudflare's 25 MB limit). From the Survey Dept Geoportal and the IEN crosswalk. |
 | 2 | `nepal_muni_2026.py` | `nepal_muni_2026.gpkg` (layer `munis`) | 753 municipalities (palikas): wards dissolved by `muni_code`. Protected-area pieces are left out. |
 | 3 | `nepal_dist_2026.py` | `nepal_dist_2026.gpkg` (layer `districts`) | 77 districts: all ward-file polygons, protected areas included, dissolved by `district_code`. |
 | 4 | `nepal_prov_2026.py` | `nepal_prov_2026.gpkg` (layer `provinces`) | 7 provinces: districts dissolved by `province_code`. |
@@ -49,4 +49,4 @@ Copies placed here on 2026-11-18, so the scripts rebuild the files exactly witho
 
 To use newer Geoportal data, delete the two GeoJSONs and rerun; the script downloads them again. The ward run also writes `nepal_wards_2026_match.csv` and `nepal_wards_2026_checks.csv` here.
 
-The ward file was first made as `01_wards_nepal.gpkg` in the 2026-10 scoping pipeline (`1_do/01_2026-10_scoping_ktm/01_wards_nepal.py`); `nepal_wards_2026.py` is a stand-alone copy of that code. Re-running it on 2026-11-18 gave the same attributes and geometries as that file.
+The ward file was first made as `01_wards_nepal.gpkg` in the 2026-10 scoping pipeline (`1_do/01_2026-10_scoping_ktm/01_wards_nepal.py`); `nepal_wards_2026.py` is a stand-alone copy of that code. Re-running it on 2026-11-18 gave the same attributes and geometries as that file. On the same day the output was split into the seven province files and given a `province_code` column (= `district_code` // 100); the wards in them are unchanged.
