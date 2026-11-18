@@ -1,26 +1,16 @@
 :root {
-  --bg: #f6f7f9; --panel: #ffffff; --ink: #1c2430; --muted: #5f6b7a; --line: #dde2e8;
-  --accent: #1f6feb; --accent-soft: #e3edfd; --active: #3bb143; --inactive: #8a939e;
+  /* IEN report palette: terracotta + warm beige on white, Montserrat */
+  --brand: #d07864; --brand-dark: #a9543f; --beige: #d8d0c3; --sand: #efeae2;
+  --bg: #ffffff; --panel: #ffffff; --ink: #1a1a1a; --muted: #5c5650; --line: #e2dbd0;
+  --accent: var(--brand-dark); --accent-soft: var(--sand); --active: #3bb143; --inactive: #8a939e;
   --rain: #2a9d8f; --market: #d9822b; --ward: #c9ced4; --ward-line: #4a5260; --path: #1c7ed6; --admin-line: #5b2a86;
-  --radius: 10px; --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+  --radius: 10px; --shadow: 0 1px 2px rgba(40,30,20,.06), 0 1px 3px rgba(40,30,20,.08);
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0f141a; --panel: #171e26; --ink: #e6ebf1; --muted: #9aa7b6; --line: #2a3440;
-    --accent: #5b9dff; --accent-soft: #1d2b40; --active: #4cc75a; --inactive: #7d8794;
-    --rain: #4cc2b3; --market: #f0a050; --ward: #c9ced4; --ward-line: #4a5260; --path: #1c7ed6; --admin-line: #5b2a86; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0f141a; --panel: #171e26; --ink: #e6ebf1; --muted: #9aa7b6; --line: #2a3440;
-  --accent: #5b9dff; --accent-soft: #1d2b40; --active: #4cc75a; --inactive: #7d8794;
-  --rain: #4cc2b3; --market: #f0a050; --ward: #c9ced4; --ward-line: #4a5260; --path: #1c7ed6; --admin-line: #5b2a86; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
-  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-h1 { font-size: 20px; margin: 0; }
+  font: 14px/1.5 "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+h1 { font-size: 22px; font-weight: 700; margin: 0; }
 h2 { font-size: 15px; margin: 0 0 6px; }
 .sub, .muted { color: var(--muted); }
 .small { font-size: 12px; margin: 0 0 8px; }
@@ -42,9 +32,9 @@ input[type=number], input[type=search], select { font: inherit; color: var(--ink
   border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
 .checks { display: flex; gap: 12px; flex-wrap: wrap; }
 .checks label { font-weight: 400; font-size: 13px; display: flex; gap: 4px; align-items: center; }
-.btn { font: inherit; font-weight: 600; border: 1px solid var(--accent); background: var(--accent); color: #fff;
+.btn { font: inherit; font-weight: 700; border: 1px solid var(--brand); background: var(--brand); color: #fff;
   border-radius: 6px; padding: 6px 12px; cursor: pointer; }
-.btn.ghost { background: transparent; color: var(--accent); }
+.btn.ghost { background: transparent; color: var(--brand-dark); }
 
 .tiles { margin: 0 20px; font-size: 12px; color: var(--muted); }
 .tiles b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -123,3 +113,18 @@ label.btn { display: inline-block; }
 .pagehead { padding: 12px 20px 0; }
 .pagehead h2 { font-size: 16px; margin: 0; }
 @media (max-width: 900px) { .tabbar { margin-left: 16px; margin-right: 16px; } .pagehead { padding-left: 16px; padding-right: 16px; } }
+
+/* IEN theme: header with logo, brand headings, beige panels */
+.top { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; gap: 18px; padding: 18px 20px 14px; }
+.top::after { content: ""; position: absolute; top: -90px; right: -90px; width: 220px; height: 220px;
+  border-radius: 50%; background: var(--beige); z-index: -1; }
+.top .logo { height: 46px; width: auto; display: block; }
+.top h1 { padding-left: 18px; border-left: 2px solid var(--line); }
+.pagehead h2 { color: var(--brand); font-size: 20px; font-weight: 700; }
+.tablehead h2 { color: var(--brand); }
+.side, .controls { background: var(--sand); border-color: var(--line); }
+.tabbar a[aria-current="page"] { color: var(--brand-dark); border-bottom-color: var(--brand); }
+.tabbar.sub a[aria-current="page"] { background: var(--sand); }
+input[type=number], input[type=search], select { background: #fff; }
+.pair input[type=range], input[type=checkbox] { accent-color: var(--brand); }
+@media (max-width: 600px) { .top { flex-wrap: wrap; gap: 8px; } .top h1 { border-left: 0; padding-left: 0; font-size: 18px; } .top .logo { height: 36px; } }
