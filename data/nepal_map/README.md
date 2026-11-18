@@ -37,8 +37,15 @@ Rebuild everything with:
 
 (or `python <script>` if geopandas is installed). Scripts 1 to 3 take an optional crosswalk path as argument; without it they use the copy in `raw/`, or else look for `2_raw/00_crosswalk/` in a parent folder (the Nepal_Floods Dropbox).
 
+## Reproducibility
+Everything in this folder is rebuilt from the three files in `raw/` by the five scripts, run in the order above. Nothing is edited by hand.
+- **Inputs are fixed:** the scripts use the saved copies in `raw/` (MD5s below) and download nothing while those copies are there.
+- **Software is pinned:** each script's header lists the exact package versions used, so `uv run` installs the same versions: requests 2.34.2, pandas 3.0.5, geopandas 1.0.1, shapely 2.0.6, pyogrio 0.10.0 (GDAL 3.9.1), openpyxl 3.1.5, on Python 3.12.5.
+- **Checked:** on 2026-11-18 all eleven `.gpkg` files were deleted and rebuilt by running the five scripts in order. Every file came back with identical attributes and geometries. Only the GeoPackage's internal timestamps differ, so git may show the files as changed after a rebuild even though their content is the same.
+- **Where the inputs live:** `raw/` is in the Nepal_Floods Dropbox only. To reproduce on another machine, copy this whole `nepal_map` folder from Dropbox, including `raw/`, not just the GitHub clone.
+
 ## `raw/` (raw inputs; in Dropbox only, not on GitHub)
-`nepal_wards_2026.py` creates `raw/` if it is missing and downloads the Geoportal layers there. It is git-ignored because the GeoJSONs are about 70 MB each (over GitHub's 50 MB warning size).
+`nepal_wards_2026.py` creates `raw/` if it is missing and downloads the Geoportal layers there. It is git-ignored because the GeoJSONs are about 70 MB each (over the GitHub and Cloudflare size limits) and the crosswalk is an internal IEN file.
 Copies placed here on 2026-11-18, so the scripts rebuild the files exactly without downloading:
 
 | File | Copied from | Version | MD5 |

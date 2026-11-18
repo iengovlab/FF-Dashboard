@@ -15,8 +15,8 @@
 #   nepal_dist_2026.gpkg                     (layer 'districts')
 # ==============================================================================
 # /// script
-# requires-python = ">=3.11"
-# dependencies = ["pandas", "geopandas", "shapely", "pyogrio", "openpyxl"]
+# requires-python = ">=3.11"  # built with Python 3.12.5
+# dependencies = ["pandas==3.0.5", "geopandas==1.0.1", "shapely==2.0.6", "pyogrio==0.10.0", "openpyxl==3.1.5"]  # versions used for the 2026-11-18 build
 # ///
 """
 nepal_dist_2026.py -> nepal_dist_2026.gpkg

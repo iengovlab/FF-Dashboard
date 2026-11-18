@@ -19,8 +19,8 @@
 #   raw/nepal_wards_2026_checks.csv (not committed, see .gitignore)
 # ==============================================================================
 # /// script
-# requires-python = ">=3.11"
-# dependencies = ["requests", "pandas", "geopandas", "shapely", "pyogrio", "openpyxl"]
+# requires-python = ">=3.11"  # built with Python 3.12.5
+# dependencies = ["requests==2.34.2", "pandas==3.0.5", "geopandas==1.0.1", "shapely==2.0.6", "pyogrio==0.10.0", "openpyxl==3.1.5"]  # versions used for the 2026-11-18 build
 # ///
 """
 nepal_wards_2026.py -> nepal_wards_2026_prov1.gpkg ... nepal_wards_2026_prov7.gpkg

@@ -12,8 +12,8 @@
 #   nepal_country_2026.gpkg   (layer 'country')
 # ==============================================================================
 # /// script
-# requires-python = ">=3.11"
-# dependencies = ["geopandas", "shapely", "pyogrio"]
+# requires-python = ">=3.11"  # built with Python 3.12.5
+# dependencies = ["geopandas==1.0.1", "shapely==2.0.6", "pyogrio==0.10.0"]  # versions used for the 2026-11-18 build
 # ///
 """
 nepal_country_2026.py -> nepal_country_2026.gpkg
